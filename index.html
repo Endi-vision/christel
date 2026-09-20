@@ -220,13 +220,13 @@
      À PERSONNALISER
      ------------------------------------------------------------------ */
   const CONFIG = {
-    name: "",                                  // ex. "Léa" → « Léa, tu veux sortir avec moi ? »
-    question: "Tu veux sortir avec moi ?",
+    name: "Christel",                                  // ex. "Léa" → « Léa, tu veux sortir avec moi ? »
+    question: "Tu viens voir le film de zo ... d'horreur avec moi ?",
     yesTitle: "Yesss !",
-    yesText: "On se voit demain !",
+    yesText: "On se voit ce weekend !",
 
     // Textes successifs du bouton Non (le dernier reste affiché ensuite)
-    noLabels: ["Non", "Sûr ?", "Vraiment ?", "Réfléchis…", "Allez…", "Pitié 🥺", "Dernière chance", "Non (bonne chance)"],
+    noLabels: ["Non", "Sûr ?", "Vraiment ?", "Réfléchis…", "Allez…", "Arrrghhh arrgh 🧟", "Dernière chance", "Pas le choix"],
 
     // Optionnel : une image/GIF à la place de l'emoji (URL complète), sinon laisser vide
     imageAsk: "",
@@ -240,18 +240,18 @@
   };
 
   const IDEAS = [
-    "Cuisiner un dîner ensemble",
-    "Une balade au coucher du soleil",
-    "Un pique-nique au parc",
-    "Un cours de danse à deux",
-    "Regarder les étoiles",
-    "Une soirée ciné à la maison, plaids et popcorn",
-    "Faire le marché du coin",
-    "Une expo ou un musée",
-    "Une soirée karaoké",
-    "Un atelier poterie",
-    "Une balade à vélo",
-    "Une soirée jeux de société",
+    "Un shooting pied ?",
+    "Le jeu d'horreur Netflix ?",
+    "Je te regarde faire ton duolingo",
+    "Un débat sur le féminisme ?",
+    "On picole !!!",
+    "Un autre film, plaids et popcorn ?",
+    "Atelier teinture de frange ?",
+    "Un concours de dessin de panda roux ?",
+    "Un massage ? (J'ai encore un peu de douleur intercostale)",
+    "On casse tes legos pour les refaire ?",
+    "On s'habille en noir et on se roule dans l'appart ?",
+    "Un tuto onlyfans ?",
     "Un spectacle ou un stand-up",
     "Un week-end dans un petit chalet",
     "Une rando avec pique-nique au sommet",
@@ -274,7 +274,7 @@
     "Un tour en montgolfière",
   ];
 
-  const MOODS = [[0, "🥺"], [3, "😢"], [6, "😭"], [10, "💔"]];
+  const MOODS = [[0, "🧟‍♀️"], [3, "🧟‍♂️"], [6, "🧟"], [10, "☠️"]];
 
   /* ------------------------------------------------------------------ */
 
@@ -462,7 +462,7 @@
     noBtn.hidden = true;
     askView.hidden = true;
     yesView.hidden = false;
-    setSticker("yes", "🥰");
+    setSticker("yes", "🧟‍♀️🍻🧟‍♂️");
     confetti();
     if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
     yesTitle.focus({ preventScroll: true });
@@ -526,7 +526,7 @@
   }
 
   /* ---------- Démarrage ---------- */
-  setSticker("ask", "🥺");
+  setSticker("ask", "🧟‍♂️");
 })();
 </script>
 </body>
