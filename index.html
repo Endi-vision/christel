@@ -230,7 +230,7 @@
 
     // Optionnel : une image/GIF à la place de l'emoji (URL complète), sinon laisser vide
     imageAsk: "",
-    imageYes: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrx8zJeihfJUDNJWBk3KmpIoxh4Qa4VrXDrZI84ts-KA&s=10",   // ex. "https://media.giphy.com/media/UMon0fuimoAN9ueUNP/giphy.gif"
+    imageYes: "",   // ex. "https://media.giphy.com/media/UMon0fuimoAN9ueUNP/giphy.gif"
 
     // Optionnel : bouton pour répondre après le « Oui ». Exemples :
     //   "https://wa.me/33612345678?text=Oui%20%21"
@@ -242,8 +242,8 @@
   const IDEAS = [
     "Un shooting pied ?",
     "Le jeu d'horreur sur netflix ?",
-    "Un débat sur le féminisme ?",
-    "On picole !!!",
+    "On lit un bouquin sur le féminisme ?",
+    "On picole chill !!!",
     "Un autre film, plaids et popcorn ?",
     "Atelier teinture de frange ?",
     "Un massage crème chauffante ?!! (J'ai encore un peu de douleur intercostale)",
@@ -255,11 +255,11 @@
     "On boit du gaspacho jusqu'à l'aube ?",
     "Un shooting pied ?",
     "Je complimente ta frange toute la soirée",
+    "On lance une nouvelle partie sur les sims ?",
     "Un resto !",
-    "Le MINIGOLF netflix bordel !",
     "On regarde la saison 1 de Walking Dead ?",
     "On tente l'arbre généalogique de Jean-mi ... Brigitte ?",
-    "Une dégustation de vin et fromage",
+    "Une dégustation de vin et fromage ?",
     "Un marathon Harry Potter ?",
     "On regarde des pubs Miko et on compare avec ton tatouage ?",
   ];
@@ -452,7 +452,7 @@
     noBtn.hidden = true;
     askView.hidden = true;
     yesView.hidden = false;
-    setSticker("yes", "🧟‍♀️🍻🧟‍♂️");
+    setSticker("yes", "🧟‍♂️🖤");
     confetti();
     if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
     yesTitle.focus({ preventScroll: true });
