@@ -42,7 +42,6 @@
     background: var(--night);
     color: var(--bone);
     font-family: var(--body);
-    /* Pas de zoom au double tap, pas de sélection ni de menu au appui long */
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -53,7 +52,7 @@
   .card {
     position: relative;
     width: min(100%, 420px);
-    margin-top: 66px; /* le sticker dépasse en haut */
+    margin-top: 66px;
     padding: 88px 22px 28px;
     background: var(--crypt);
     border: var(--edge) solid var(--rim);
@@ -101,18 +100,6 @@
 
   .lead { margin: 14px 0 0; font-size: 1.15rem; font-weight: 700; }
 
-  .idea {
-    margin: 20px 0 0;
-    padding: 14px 16px;
-    background: var(--night);
-    border: var(--edge) solid var(--slime);
-    border-radius: 18px;
-    font-size: 1.05rem;
-    font-weight: 700;
-    text-wrap: balance;
-    transform: rotate(1deg);
-  }
-
   .actions {
     margin-top: 36px;
     display: flex;
@@ -146,13 +133,11 @@
   .yes { background: var(--blood); color: var(--bone); }
   .no  { background: var(--slime); }
 
-  /* Le bouton Oui grossit à chaque esquive du Non */
   .yes-wrap {
     transform: scale(var(--s, 1));
     transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
   }
 
-  /* Réserve la place du Non pour que la mise en page ne bouge pas quand il s'échappe */
   .no-slot { height: 58px; min-width: 150px; display: grid; place-items: center; }
 
   .no.loose {
@@ -202,10 +187,9 @@
   <section id="yes" hidden>
     <h1 id="yesTitle" tabindex="-1"></h1>
     <p class="lead" id="yesText"></p>
-    <p class="idea" id="idea" aria-live="polite" hidden></p>
   </section>
 <div class="actions">
-      <button class="btn yes" id="ideaBtn" type="button">Bande Annonce</button>
+      <a class="btn yes" id="trailerBtn" href="#" target="_blank" rel="noopener" hidden>Bande Annonce</a>
       <a class="btn no" id="reply" target="_blank" rel="noopener" hidden></a>
     </div>
 </main>
@@ -220,39 +204,22 @@
      À PERSONNALISER
      ------------------------------------------------------------------ */
   const CONFIG = {
-    name: "Christel",                                  // ex. "Léa" → « Léa, tu veux sortir avec moi ? »
+    name: "Christel",
     question: "Tu viens voir le film de zo ... d'horreur avec moi ?",
     yesTitle: "Yesss !",
     yesText: "Bon ça peut être un autre truc ... 🧟‍♀️🍻🧟‍♂️",
 
-    // Textes successifs du bouton Non (le dernier reste affiché ensuite)
     noLabels: ["Non", "Sûr ?", "Vraiment ?", "Réfléchis…", "Allez…", "Non non non", "Dernière chance", "Arrrghhh arrgh 🧟"],
 
-    // Optionnel : une image/GIF à la place de l'emoji (URL complète), sinon laisser vide
     imageAsk: "",
-    imageYes: "",   // ex. "https://media.giphy.com/media/UMon0fuimoAN9ueUNP/giphy.gif"
+    imageYes: "",
 
-    // Optionnel : bouton pour répondre après le « Oui ». Exemples :
-    //   "https://wa.me/33612345678?text=Oui%20%21"
-    //   "sms:+33674846962?&body=Oui%20%21"
+    // Lien YouTube de la bande-annonce, affiché après le « Oui »
+    trailerLink: "https://www.youtube.com/watch?v=XXXXXXXXXXX",
+
     replyLink: "sms:+33674846962?&body=Oui avec plaisir ❤️ C'est vraiment adorable de penser à moi pour aller voir un film ! Merci beaucoup et vive les pieds et l'eau de mon bain%20%21",
     replyLabel: "Répondre par message",
   };
-
-  const IDEAS = [
-    "Un shooting pied ?",
-    "Le jeu d'horreur sur netflix ?",
-    "On picole chill !!!",
-    "Un massage crème chauffante ?!! (J'ai encore un peu de douleur intercostale)",
-    "On casse tes legos pour les refaire ?",
-    "Je te fais un tutoriel onlyfans !",
-    "Je te déguise en Roumaine ?",
-    "On boit du gaspacho jusqu'à l'aube ?",
-    "Je complimente ta frange toute la soirée",
-    "Une dégustation de vin et fromage ?",
-    "Un marathon Harry Potter ?",
-    "On regarde des pubs Miko et on compare avec ton tatouage ?",
-  ];
 
   const MOODS = [[0, "🧟‍♀️"], [3, "🧟‍♂️"], [6, "🧟"], [10, "☠️"]];
 
@@ -264,11 +231,11 @@
   const askView = $("#ask"), yesView = $("#yes");
   const askTitle = $("#askTitle"), yesTitle = $("#yesTitle"), yesText = $("#yesText");
   const yesWrap = $("#yesWrap"), yesBtn = $("#yesBtn"), noBtn = $("#noBtn");
-  const ideaBtn = $("#ideaBtn"), idea = $("#idea"), reply = $("#reply");
+  const trailerBtn = $("#trailerBtn"), reply = $("#reply");
 
-  let count = 0;        // nombre d'esquives
-  let loose = false;    // le bouton Non est-il sorti du flux ?
-  let done = false;     // le Oui a-t-il été cliqué ?
+  let count = 0;
+  let loose = false;
+  let done = false;
   let lastDodge = 0;
 
   /* ---------- Textes ---------- */
@@ -279,6 +246,10 @@
   yesTitle.textContent = CONFIG.yesTitle;
   yesText.textContent = CONFIG.yesText;
 
+  if (CONFIG.trailerLink) {
+    trailerBtn.href = CONFIG.trailerLink;
+  }
+
   if (CONFIG.replyLink) {
     reply.href = CONFIG.replyLink;
     reply.textContent = CONFIG.replyLabel;
@@ -288,7 +259,7 @@
   /* ---------- Sticker ---------- */
   function wiggle() {
     sticker.classList.remove("pop");
-    void sticker.offsetWidth; // relance l'animation
+    void sticker.offsetWidth;
     sticker.classList.add("pop");
   }
 
@@ -337,7 +308,6 @@
   const overlap = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
   const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), Math.max(lo, hi));
 
-  // Sort le bouton du flux sans qu'il saute visuellement
   function detach() {
     if (loose) return;
     const r = noBtn.getBoundingClientRect();
@@ -373,7 +343,6 @@
       y: py ?? cur.top + h / 2,
     };
 
-    // Zone du bouton Oui une fois agrandi (le centre ne bouge pas quand on scale)
     const yb = yesBtn.getBoundingClientRect();
     const cx = yb.left + yb.width / 2, cy = yb.top + yb.height / 2;
     const bw = yesBtn.offsetWidth * scale, bh = yesBtn.offsetHeight * scale;
@@ -394,7 +363,6 @@
       return ok.length ? ok[Math.floor(Math.random() * ok.length)] : null;
     };
 
-    // On essaie d'abord d'éviter texte + sticker + Oui, puis on assouplit
     const spot = pick(strict, 130) || pick([yesRect], 90) || pick([], 60) || { x: minX, y: minY };
 
     noBtn.style.left = spot.x + "px";
@@ -402,22 +370,18 @@
     if (navigator.vibrate) navigator.vibrate(12);
   }
 
-  // Tactile, souris et stylet : « pointerdown » remplace le « mouseover » qui n'existe pas sur mobile
   noBtn.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     dodge(e.clientX, e.clientY);
   });
 
-  // Empêche le « clic fantôme » sur les anciens navigateurs mobiles
   noBtn.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
 
-  // Clavier (Entrée / Espace) : le Non fuit aussi
   noBtn.addEventListener("click", (e) => {
     e.preventDefault();
     dodge();
   });
 
-  // Souris : le bouton fuit dès que le curseur s'approche
   document.addEventListener("pointermove", (e) => {
     if (e.pointerType !== "mouse" || done || performance.now() - lastDodge < 250) return;
     const r = noBtn.getBoundingClientRect();
@@ -426,7 +390,6 @@
     if (Math.hypot(dx, dy) < 40) dodge(e.clientX, e.clientY);
   });
 
-  // Rotation de l'écran / redimensionnement : le Non reste visible
   window.addEventListener("resize", () => {
     if (!loose || done) return;
     const r = noBtn.getBoundingClientRect();
@@ -442,20 +405,11 @@
     noBtn.hidden = true;
     askView.hidden = true;
     yesView.hidden = false;
+    trailerBtn.hidden = false;
     setSticker("yes", "🧟‍♂️🖤");
     confetti();
     if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
     yesTitle.focus({ preventScroll: true });
-  });
-
-  let lastIdea = -1;
-  ideaBtn.addEventListener("click", () => {
-    let i;
-    do { i = Math.floor(Math.random() * IDEAS.length); } while (i === lastIdea);
-    lastIdea = i;
-    idea.textContent = IDEAS[i];
-    idea.hidden = false;
-    ideaBtn.textContent = "Une autre idée";
   });
 
   /* ---------- Confettis ---------- */
